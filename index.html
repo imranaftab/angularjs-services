@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Angular JS Learning</title>
+		<!-- Angular JS CDN -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		
+	</head>
+	<body>
+		<!-- Angular JS Application Starts Here -->
+		
+		<div ng-app="myApp" ng-controller="MainController">
+				<!--Url fetching with Angular JS-->
+				<div>	Complete Url of this page is : <b>{{weburl}}</b>
+				</div>
+				<!--Timeout with Angular JS-->
+				
+				<hr/>
+				<div><br/>
+				<b>{{bingo}}<b>
+				</div>
+				<!--setInterval with Angular JS-->
+				<hr/>
+				<div><br/>
+				<b>{{showingTime}}<b>
+				</div>
+				
+				<!--Webservice with Angular JS-->
+				<hr/>
+				Search: <input ng-model="search" type="text" placeholder="Search a product here...."/>
+				<ul>
+					<li ng-repeat="product in products|filter:search">{{product.ProductName}} </li>
+				</ul></div>
+	
+		<script>
+			var myApp = angular.module("myApp",[]);
+			myApp.service('imran',function(){
+				this.baby=  function(x){return 2*x;}
+			});
+			myApp.controller('MainController',function($scope,$location,$timeout,$interval, $http,imran){
+				//Returns complete url of website
+				$scope.weburl = $location.absUrl();
+				
+				//HTTP Service (uses XHR)
+				$http.get('http://services.odata.org/V4/Northwind/Northwind.svc/Products?$select=ProductName')
+				 .then(function (response) {$scope.products = response.data.value;});
+				
+				$scope.showingTime= 1;
+				//Fires everytime specified miliseconds pass
+				$interval(function(){
+					$scope.showingTime++;
+				},1000);
+				
+				$scope.bingo="Timeout after 3 seconds.....";
+				//Fires after specified timeout passes 
+				$timeout(function(){$scope.bingo ="Bingo! Timeout!"},3000);
+				
+				//Custom service
+				$scope.doublee = imran.baby(2);
+			  }
+			);
+		</script>
+		
+	</body>
+</html>
